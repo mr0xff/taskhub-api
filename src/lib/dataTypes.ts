@@ -1,4 +1,4 @@
-import { read, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 
 export class Email{
   #email: string;
