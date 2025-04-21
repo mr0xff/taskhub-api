@@ -14,7 +14,7 @@ const auth:FastifyPluginAsync = async function (fastify){
         secret: new Password(secret) 
       });
 
-      const token = await res.jwtSign({ id: user.email });
+      const token = fastify.jwt.sign({ id: user.email });
 
       res.code(200).send({
         message: "login feito com sucesso",

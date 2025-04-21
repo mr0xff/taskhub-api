@@ -5,8 +5,8 @@ const user:FastifyPluginAsync = async function (fastify){
   fastify.addHook('preHandler', fastify.auth([fastify.authentication]));
   
   fastify.get('/', userGetSchema, async function(req, res){
-
     try{
+      
       res.send({
         id: "",
         username: "",
