@@ -4,8 +4,11 @@ const projectPostSchema:FastifySchema = {
   body: {
     type: "object",
     properties: {
-      
-    }
+      title: { type: "string" },
+      summary: { type: "string" },
+    },
+    
+    required: [ "title" ]
   }
 };
 

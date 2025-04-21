@@ -1,4 +1,3 @@
-
 interface ProjectIF {
   title: string;
   summary: string;
@@ -31,7 +30,7 @@ interface CheckPointIF {
 
 class UserPermission {}
 
-class CheckPoint implements CheckPointIF {
+export class CheckPoint implements CheckPointIF {
   #description: string;
   #isDone: boolean;
   #times: { createAt: Date;  updateAt: Date };
