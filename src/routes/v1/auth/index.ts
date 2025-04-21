@@ -3,6 +3,8 @@ import authPostSchema from "./authPostSchema.js";
 import { Email, Password, User, UserType } from "../../../lib/dataTypes.js";
 
 const auth:FastifyPluginAsync = async function (fastify){
+  fastify.register(()=> {});
+
   fastify.post('/', authPostSchema, async function(req, res){
     try{
       const { email, secret } = req.body as UserType;
@@ -11,11 +13,12 @@ const auth:FastifyPluginAsync = async function (fastify){
         email: new Email(email), 
         secret: new Password(secret) 
       });
-      
-      console.log(user.toJSON());
+
+      const token = await res.jwtSign({ id: user.email });
 
       res.code(200).send({
         message: "login feito com sucesso",
+        token,
         status: true
       });
     }catch(e){

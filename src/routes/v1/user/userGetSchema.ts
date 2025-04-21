@@ -1,21 +1,21 @@
 import { FastifySchema } from "fastify";
 
-const authPostSchema:FastifySchema = {
-  body: {
+const userGetSchema:FastifySchema = {
+  headers: {
     type: "object",
     properties: {
-      email: { type: "string" },
-      secret: { type: "string" }
+      "x-auth-key": { type: "string" },
+      "x-authorization-key": { type: "string" }
     },
-    required: [ "email", "secret" ]
+    required: ["x-auth-key"]
   },
   response: {
     200: {
       type: "object",
       properties: {
-        token: { type: "string" },
-        message: { type: "string" },
-        status: { type: "boolean" },
+        id: { type: "string" },
+        username: { type: "string" },
+        email: { type: "string" }
       }
     },
     403: {
@@ -29,4 +29,6 @@ const authPostSchema:FastifySchema = {
   }
 }
 
-export default { schema: authPostSchema };
+export default {
+  schema: userGetSchema
+}
