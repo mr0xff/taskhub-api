@@ -1,9 +1,16 @@
 export default class ClientAuthError {
-  #clients!: HTTPClient[];
+  #clients:HTTPClient[] = [];
 
   add(client: HTTPClient){
-    if(!this.#clients.find(props => props.ip === client.ip))
+    if(!this.#find(client))
       this.#clients.push(client);
+  }
+
+  #find(client: HTTPClient){
+    const foundedClient = this.#clients.find(props => props.ip === client.ip);
+    if(!!foundedClient)
+      foundedClient.run();
+    return !!foundedClient;
   }
 }
 
@@ -25,7 +32,7 @@ export class HTTPClient {
   #validator(){
     if(!(this.#ip instanceof IpAddress))
       throw new TypeError("tipo invalido para o endereço de IP");
-    if(typeof this.#userAgent !== typeof String())
+    if(typeof this.#userAgent !== typeof "string")
       throw new TypeError("tipo invalido para o userAgent");
   }
 
@@ -36,18 +43,21 @@ export class HTTPClient {
     }
     
     this.#failedAuth++;
+
+    console.log(this.#failedAuth);
   }
 
   #sleep(){
     if(!this.#isSleeping)
+      this.#isSleeping = true;
       setTimeout(()=>{
         this.#failedAuth = 0;
-        this.#isSleeping = true;
+        this.#isSleeping = false;
       }, 1000*30);
   }
 
   get ip(){
-    return this.#ip;
+    return this.#ip.ip;
   }
 }
 

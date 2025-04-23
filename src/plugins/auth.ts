@@ -1,6 +1,6 @@
 import fp from "fastify-plugin";
 import auth, { FastifyAuthFunction } from '@fastify/auth';
-import ClientAuthError from "../lib/ClientAuthError.js";
+import ClientAuthError, { HTTPClient, IpAddress } from "../lib/ClientAuthError.js";
 
 export default fp(async function(fastify){
   fastify.register(auth);
@@ -31,10 +31,13 @@ export default fp(async function(fastify){
         "FAST_JWT_MALFORMED": "token mal formatado"
       };
 
-      console.log(cAuthError);
+      cAuthError.add(
+        new HTTPClient(new IpAddress(req.ip), 
+        req.headers["user-agent"] as string
+      ));
 
-      fastify.log.error(req.ip);
-      
+      fastify.log.error(req.headers["user-agent"]);
+
       return res.code(401).send({
         message: customMsgError[err.code],
         message_en: err.message,
