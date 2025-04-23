@@ -1,4 +1,13 @@
 export default class ClientAuthError {
+  #clients!: HTTPClient[];
+
+  add(client: HTTPClient){
+    if(!this.#clients.find(props => props.ip === client.ip))
+      this.#clients.push(client);
+  }
+}
+
+export class HTTPClient {
   #ip: IpAddress;
   #userAgent: string;
   #failedAuth = 0;
@@ -26,6 +35,7 @@ export default class ClientAuthError {
       throw new Error("tentativas excedida, tente mais tarde");
     }
     
+    this.#failedAuth++;
   }
 
   #sleep(){
@@ -34,6 +44,10 @@ export default class ClientAuthError {
         this.#failedAuth = 0;
         this.#isSleeping = true;
       }, 1000*30);
+  }
+
+  get ip(){
+    return this.#ip;
   }
 }
 

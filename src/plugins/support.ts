@@ -9,7 +9,7 @@ export interface SupportPluginOptions {
 export default fp<SupportPluginOptions>(async (fastify, opts) => {
   fastify.decorate('someSupport', function () {
     return 'hugs'
-  })
+  });
 })
 
 // When using .decorate you have to specify added properties for Typescript

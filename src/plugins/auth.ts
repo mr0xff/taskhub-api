@@ -1,9 +1,10 @@
 import fp from "fastify-plugin";
 import auth, { FastifyAuthFunction } from '@fastify/auth';
+import ClientAuthError from "../lib/ClientAuthError.js";
 
 export default fp(async function(fastify){
-
   fastify.register(auth);
+  const cAuthError = new ClientAuthError();
 
   fastify.decorate<FastifyAuthFunction>('authorization', async function(req, res, next){
     fastify.log.warn('authriztion checking');
@@ -30,7 +31,9 @@ export default fp(async function(fastify){
         "FAST_JWT_MALFORMED": "token mal formatado"
       };
 
-      fastify.log.error(err.code);
+      console.log(cAuthError);
+
+      fastify.log.error(req.ip);
       
       return res.code(401).send({
         message: customMsgError[err.code],
