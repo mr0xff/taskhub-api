@@ -14,7 +14,10 @@ const auth:FastifyPluginAsync = async function (fastify){
         secret: new Password(secret) 
       });
 
-      const token = fastify.jwt.sign({ id: user.email });
+      const token = fastify.jwt.sign({ id: user.email }, { 
+        expiresIn: "5m",
+        algorithm: "HS512" 
+      });
 
       res.code(200).send({
         message: "login feito com sucesso",

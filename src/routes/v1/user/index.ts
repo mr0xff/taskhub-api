@@ -6,11 +6,10 @@ const user:FastifyPluginAsync = async function (fastify){
   
   fastify.get('/', userGetSchema, async function(req, res){
     try{
-      
       res.send({
-        id: "",
-        username: "",
-        email: ""
+        id: "10010",
+        username: "eviluser",
+        email: "authed@evil.com"
       });
     }catch(e){
       const err = e as Error;

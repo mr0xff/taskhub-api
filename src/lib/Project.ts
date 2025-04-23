@@ -1,9 +1,9 @@
-interface ProjectIF {
-  title: string;
-  summary: string;
-  tasks: unknown[];
-  allowed_users: unknown[];
-};
+// interface ProjectIF {
+//   title: string;
+//   summary: string;
+//   tasks: unknown[];
+//   allowed_users: unknown[];
+// };
 
 interface TaskIF {
   title: string;
@@ -28,7 +28,7 @@ interface CheckPointIF {
   responsible: string;
 }
 
-class UserPermission {}
+// class UserPermission {}
 
 export class CheckPoint implements CheckPointIF {
   #description: string;
@@ -120,7 +120,7 @@ export default class Project {
   #title: string;
   #summary: string;
   #tasks: InstanceType<typeof Task>[];
-  #allowedUsers!: unknown[];
+  // #allowedUsers!: unknown[];
 
   constructor(
     title: string,

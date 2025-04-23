@@ -10,9 +10,14 @@ export default fp(async function(fastify){
   });
 
   fastify.decorate<FastifyAuthFunction>('authentication', async function (req, res, next){
-    fastify.log.warn(req.headers['x-auth-key']);
-    fastify.userId = fastify.jwt.decode(req.headers['x-auth-key'] as string) ?? undefined;
-    console.log(fastify.userId);
+    try{
+      fastify.userId = fastify.jwt.decode(req.headers['x-auth-key'] as string) ?? undefined;
+      fastify.log.warn(fastify.userId);
+    }catch(e){
+      const err = e as Error;
+      fastify.log.error(err.message);
+      throw new Error("token invalido!");
+    }
   });
 
 });

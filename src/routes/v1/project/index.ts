@@ -43,8 +43,9 @@ const project:FastifyPluginAsync = async function (fastify){
   fastify.get('/:projectId', async function (req, res){
     try{
       const params = req.params;
+      fastify.log.warn(params);
 
-      res.send({});
+      res.send({ params });
     }catch(e){
       const err = e as Error;
       
