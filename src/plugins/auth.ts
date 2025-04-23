@@ -2,6 +2,7 @@ import fp from "fastify-plugin";
 import auth, { FastifyAuthFunction } from '@fastify/auth';
 
 export default fp(async function(fastify){
+
   fastify.register(auth);
 
   fastify.decorate<FastifyAuthFunction>('authorization', async function(req, res, next){
@@ -11,12 +12,32 @@ export default fp(async function(fastify){
 
   fastify.decorate<FastifyAuthFunction>('authentication', async function (req, res, next){
     try{
-      fastify.userId = fastify.jwt.decode(req.headers['x-auth-key'] as string) ?? undefined;
+      const userToken = req.headers['x-auth-key'] as string;
+      fastify.jwt.verify(userToken);
+      fastify.userId = fastify.jwt.decode(userToken) as string;
       fastify.log.warn(fastify.userId);
     }catch(e){
-      const err = e as Error;
-      fastify.log.error(err.message);
-      throw new Error("token invalido!");
+      const err = e as Error & { code: string };
+      
+      type CustomMsgError = {
+        [key:string]: string;
+      }
+
+      const customMsgError:CustomMsgError = {
+        "FAST_JWT_EXPIRED": "token expirado",
+        "FAST_JWT_INVALID_SIGNATURE": "assinatura do token invalida",
+        "ERR_ASSERTION": "sem token definido",
+        "FAST_JWT_MALFORMED": "token mal formatado"
+      };
+
+      fastify.log.error(err.code);
+      
+      return res.code(401).send({
+        message: customMsgError[err.code],
+        message_en: err.message,
+        status: false,
+        type: "error"
+      });
     }
   });
 
