@@ -35,9 +35,7 @@ export default fp(async function(fastify){
         new HTTPClient(new IpAddress(req.ip), 
         req.headers["user-agent"] as string
       ));
-
-      fastify.log.error(req.headers["user-agent"]);
-
+      
       return res.code(401).send({
         message: customMsgError[err.code],
         message_en: err.message,

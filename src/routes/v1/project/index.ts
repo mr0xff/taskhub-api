@@ -4,6 +4,8 @@ import Project from "../../../lib/Project.js";
 import projectGetSchema from "./projectGetSchema.js";
 
 const project:FastifyPluginAsync = async function (fastify){
+  fastify.addHook('preHandler', fastify.auth([fastify.authentication]));
+
   fastify.post('/', projectPostSchema, async function(req, res){
     try{
       const { title, summary } = req.body as InstanceType<typeof Project>;
