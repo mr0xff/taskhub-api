@@ -13,10 +13,11 @@ export default fp(async function(fastify){
 
   fastify.decorate<FastifyAuthFunction>('authentication', async function (req, res, next){
     try{
-      const userToken = req.headers['x-auth-key'] as string;
+      const userToken = req.headers[String(process.env.AUTH_HEADER)] as string;
       fastify.jwt.verify(userToken);
       fastify.userId = fastify.jwt.decode(userToken) as string;
       fastify.log.warn(fastify.userId);
+      next();
     }catch(e){
       const err = e as Error & { code: string };
       

@@ -1,6 +1,6 @@
 import { FastifySchema } from "fastify";
 
-const userGetSchema:FastifySchema = {
+const userPutSchema:FastifySchema = {
   headers: {
     type: "object",
     properties: {
@@ -8,6 +8,13 @@ const userGetSchema:FastifySchema = {
       [String(process.env.AUTHORIZATION_HEADER)]: { type: "string" }
     },
     required: [String(process.env.AUTH_HEADER)]
+  },
+  body: {
+    type: "object",
+    properties: {
+      email: { type: "string" }
+    },
+    required: ["email"]
   },
   response: {
     200: {
@@ -30,5 +37,5 @@ const userGetSchema:FastifySchema = {
 }
 
 export default {
-  schema: userGetSchema
+  schema: userPutSchema
 }

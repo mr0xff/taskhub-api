@@ -53,7 +53,7 @@ export class HTTPClient {
       setTimeout(()=>{
         this.#failedAuth = 0;
         this.#isSleeping = false;
-      }, 1000*30);
+      }, 1000*Number(process.env.FAILURE_RATE_LIMIT_TIME));
   }
 
   get ip(){

@@ -15,7 +15,7 @@ const auth:FastifyPluginAsync = async function (fastify){
       });
 
       const token = fastify.jwt.sign({ id: user.email }, { 
-        expiresIn: "5m",
+        expiresIn: "15m",
         algorithm: "HS512" 
       });
 
