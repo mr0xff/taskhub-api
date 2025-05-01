@@ -1,6 +1,6 @@
 import { FastifySchema } from "fastify";
 
-const userPutSchema:FastifySchema = {
+const passwordPutSchema:FastifySchema = {
   headers: {
     type: "object",
     properties: {
@@ -12,9 +12,11 @@ const userPutSchema:FastifySchema = {
   body: {
     type: "object",
     properties: {
-      email: { type: "string" }
+      currentPass: { type: "string" },
+      newPass: { type: "string" },
+      confirmPass: { type: "string" }
     },
-    required: ["email"]
+    required: [ "currentPass", "newPass", "confirmPass" ]
   },
   response: {
     200: {
@@ -36,5 +38,5 @@ const userPutSchema:FastifySchema = {
 }
 
 export default {
-  schema: userPutSchema
+  schema: passwordPutSchema
 }
