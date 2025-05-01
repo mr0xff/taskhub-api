@@ -25,6 +25,14 @@ const signup:FastifyPluginAsync = async function(fastify){
       if (user.secret !== confirmPass.password)
         throw new Error("senhas diferentes!");
   
+      await fastify.db.user.create({
+        data: {
+          username,
+          email,
+          password
+        }
+      });
+      
       res.code(201).send({
         message: "sua conta foi criada com sucesso!",
         status: true

@@ -14,7 +14,6 @@ const password: FastifyPluginAsync = async function (fastify, opts){
   fastify.put('/', passwordPutSchema, async function(req, res){
     try{
       const {
-        currentPass,
         newPass,
         confirmPass
       } = req.body as PasswordIF;
