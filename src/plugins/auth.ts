@@ -13,6 +13,9 @@ export default fp(async function(fastify){
   });
 
   fastify.decorate("argon2", argon2);
+  fastify.decorate("clientRateLimit", ClientAuthError);
+  fastify.decorate("clientRateLimitHttp", HTTPClient);
+  fastify.decorate("clientRateLimitIpAddrr", IpAddress);
 
   fastify.decorate<FastifyAuthFunction>('authentication', async function (req, res, next){
     try{
@@ -56,5 +59,8 @@ declare module 'fastify' {
     authorization(): FastifyAuthFunction;
     authentication(): FastifyAuthFunction;
     argon2: typeof argon2;
+    clientRateLimit: typeof ClientAuthError;
+    clientRateLimitHttp: typeof HTTPClient;
+    clientRateLimitIpAddrr: typeof IpAddress;
   }
 }

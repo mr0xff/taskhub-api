@@ -3,6 +3,7 @@ import authPostSchema from "./authPostSchema.js";
 import { Email, Password, User, UserType } from "../../../lib/dataTypes.js";
 
 const auth:FastifyPluginAsync = async function (fastify){
+  const clientRateLimit = new fastify.clientRateLimit;
 
   fastify.post('/', authPostSchema, async function(req, res){
     try{
@@ -21,8 +22,6 @@ const auth:FastifyPluginAsync = async function (fastify){
       if(!(await fastify.argon2.verify(foundedUser.password, user.secret)))
         throw new Error("email ou senha invalida!");
 
-      fastify.log.warn(foundedUser);
-
       const token = fastify.jwt.sign({
         id: foundedUser.id,
         username: foundedUser.username,
@@ -39,6 +38,11 @@ const auth:FastifyPluginAsync = async function (fastify){
       });
     }catch(e){
       const err = e as Error; 
+      
+      clientRateLimit.add(
+        new fastify.clientRateLimitHttp(new fastify.clientRateLimitIpAddrr(req.ip), 
+        req.headers["user-agent"] as string
+      ));
 
       res.code(401).send({
         message: err.message,
