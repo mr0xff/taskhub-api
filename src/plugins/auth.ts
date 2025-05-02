@@ -1,6 +1,7 @@
 import fp from "fastify-plugin";
 import auth, { FastifyAuthFunction } from '@fastify/auth';
 import ClientAuthError, { HTTPClient, IpAddress } from "../lib/ClientAuthError.js";
+import argon2 from 'argon2';
 
 export default fp(async function(fastify){
   fastify.register(auth);
@@ -10,6 +11,8 @@ export default fp(async function(fastify){
     fastify.log.warn('authriztion checking');
     next();
   });
+
+  fastify.decorate("argon2", argon2);
 
   fastify.decorate<FastifyAuthFunction>('authentication', async function (req, res, next){
     try{
@@ -52,5 +55,6 @@ declare module 'fastify' {
   export interface FastifyInstance {
     authorization(): FastifyAuthFunction;
     authentication(): FastifyAuthFunction;
+    argon2: typeof argon2;
   }
 }

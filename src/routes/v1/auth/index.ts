@@ -3,7 +3,6 @@ import authPostSchema from "./authPostSchema.js";
 import { Email, Password, User, UserType } from "../../../lib/dataTypes.js";
 
 const auth:FastifyPluginAsync = async function (fastify){
-  fastify.register(()=> {});
 
   fastify.post('/', authPostSchema, async function(req, res){
     try{
@@ -14,7 +13,21 @@ const auth:FastifyPluginAsync = async function (fastify){
         secret: new Password(secret) 
       });
 
-      const token = fastify.jwt.sign({ id: user.email }, { 
+      const foundedUser = await fastify.db.user.findUnique({ where: { email: user.email }});
+      
+      if(!foundedUser)
+        throw new Error("email ou senha invalida!");
+      
+      if(!(await fastify.argon2.verify(foundedUser.password, user.secret)))
+        throw new Error("email ou senha invalida!");
+
+      fastify.log.warn(foundedUser);
+
+      const token = fastify.jwt.sign({
+        id: foundedUser.id,
+        username: foundedUser.username,
+        email: foundedUser.email
+      }, { 
         expiresIn: "15m",
         algorithm: "HS512" 
       });

@@ -29,7 +29,7 @@ const signup:FastifyPluginAsync = async function(fastify){
         data: {
           username,
           email,
-          password
+          password: await fastify.argon2.hash(password)
         }
       });
       
@@ -38,10 +38,10 @@ const signup:FastifyPluginAsync = async function(fastify){
         status: true
       });
     }catch(e){
-      const err  = e as Error;
+      const err  = e as Error & { code: string };
 
       return res.code(401).send({
-        message: err.message,
+        message: err.code === "P2002"? "nome ou email invalido!":err.message,
         status: false,
         type: "warn"
       });
