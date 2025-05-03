@@ -13,7 +13,7 @@ const userGetSchema:FastifySchema = {
     200: {
       type: "object",
       properties: {
-        id: { type: "string" },
+        id: { type: "number" },
         username: { type: "string" },
         email: { type: "string" }
       }

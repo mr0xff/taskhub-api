@@ -27,6 +27,7 @@ export default fp(async function(fastify){
       next();
     }catch(e){
       const err = e as Error & { code: string };
+      console.log(err.message);
       
       type CustomMsgError = {
         [key:string]: string;
