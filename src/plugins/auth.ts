@@ -2,10 +2,12 @@ import fp from "fastify-plugin";
 import auth, { FastifyAuthFunction } from '@fastify/auth';
 import ClientAuthError, { HTTPClient, IpAddress } from "../lib/ClientAuthError.js";
 import argon2 from 'argon2';
+import { User } from "@prisma/client";
 
 export default fp(async function(fastify){
   fastify.register(auth);
-  const cAuthError = new ClientAuthError();
+
+  const clientRateLimit = new ClientAuthError();
 
   fastify.decorate<FastifyAuthFunction>('authorization', async function(req, res, next){
     fastify.log.warn('authriztion checking');
@@ -21,8 +23,7 @@ export default fp(async function(fastify){
     try{
       const userToken = req.headers[String(process.env.AUTH_HEADER)] as string;
       fastify.jwt.verify(userToken);
-      fastify.userId = fastify.jwt.decode(userToken) as string;
-      fastify.log.warn(fastify.userId);
+      fastify.user = fastify.jwt.decode(userToken) as User;
       next();
     }catch(e){
       const err = e as Error & { code: string };
@@ -38,7 +39,7 @@ export default fp(async function(fastify){
         "FAST_JWT_MALFORMED": "token mal formatado"
       };
 
-      cAuthError.add(
+      clientRateLimit.add(
         new HTTPClient(new IpAddress(req.ip), 
         req.headers["user-agent"] as string
       ));

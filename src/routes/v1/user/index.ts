@@ -8,10 +8,12 @@ const user:FastifyPluginAsync = async function (fastify){
   
   fastify.get('/', userGetSchema, async function(req, res){
     try{
+      const user = await fastify.db.user.findUnique({ where: { id: fastify.user?.id }})
+
       res.send({
-        id: "10010",
-        username: "eviluser",
-        email: "authed@evil.com"
+        id: user?.id,
+        username: user?.username,
+        email: user?.email
       });
     }catch(e){
       const err = e as Error;
@@ -28,6 +30,13 @@ const user:FastifyPluginAsync = async function (fastify){
     try{
       const body = req.body as { email: string };
       const email = new Email(body.email);
+      
+      await fastify.db.user.update({
+        where: { id: fastify.user.id },
+        data: {
+          email: email.email
+        }
+      });
 
       res.send({
         message: "informações actualizadas com sucesso!",
